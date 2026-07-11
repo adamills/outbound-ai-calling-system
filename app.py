@@ -15,8 +15,7 @@ def log_call():
     log = CallLog(**data)
     db.add(log)
     db.commit()
-    return {'status':'logged','call_id':log.call_id}
-
+  
 @app.route('/api/calls/logs', methods=['GET'])
 def get_logs():
     db = SessionLocal()

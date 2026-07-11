@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine, Column, String, Integer, DateTime
 from sqlalchemy.orm import declarative_base, sessionmaker
 import os
-
 DATABASE_URL = os.getenv('DATABASE_URL','postgresql+pg8000://user:password@localhost:5432/outbound_ai')
 
 engine = create_engine(DATABASE_URL, echo=True)
