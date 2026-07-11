@@ -1,0 +1,67 @@
+services:
+  - type: web
+    name: outbound-ai-calling-system
+    env: python
+    plan: standard
+    
+    # Build configuration
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --workers 4 --worker-class sync --bind 0.0.0.0:$PORT app:app
+    
+    # Environment variables
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: ELEVENLABS_API_KEY
+        scope: secret
+      - key: TELNYX_API_KEY
+        scope: secret
+      - key: TELNYX_CONNECTION_ID
+        scope: secret
+      - key: ASTERISK_HOST
+        value: localhost
+      - key: ASTERISK_PORT
+        value: "5060"
+      - key: LOG_LEVEL
+        value: INFO
+    
+    # Health check
+    healthCheckPath: /health
+    healthCheckInterval: 10
+    
+    # Disk configuration
+    disk:
+      name: call-logs
+      mountPath: /var/spool/asterisk/recordings
+      sizeGB: 10
+    
+    # Autoscaling
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+      targetMemoryPercent: 70
+      targetCPUPercent: 70
+    
+    # Port configuration
+    ports:
+      - port: 5000
+        protocol: HTTP
+
+# Optional: Add background worker for processing calls
+# workers:
+#   - type: worker
+#     name: call-processor
+#     env: python
+#     plan: standard
+#     buildCommand: pip install -r requirements.txt
+#     startCommand: python worker.py
+#     envVars:
+#       - key: QUEUE_URL
+#         scope: secret
+
+# Cron jobs for analytics
+# jobs:
+#   - type: cron
+#     name: call-analytics
+#     schedule: "0 * * * *"
+#     startCommand: python scripts/analytics.py
