@@ -1,0 +1,8 @@
+flask==3.0.0
+requests==2.32.3
+telnyx==3.0.0
+elevenlabs==0.2.27
+pydub==0.25.1
+gunicorn==22.0.0
+pyaudio==0.2.14
+pydantic==2.12.0
